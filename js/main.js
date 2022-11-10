@@ -16,6 +16,7 @@ window.onload = function () {
   document.getElementById("back-icon").innerHTML = folder + leftArrow;
 };
 
+// array central
 let game = {
   guesses: [],
   solution: {},
