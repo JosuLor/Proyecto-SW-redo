@@ -1,7 +1,6 @@
 export { fetchJSON };
 
-async function fetchJSON(what) {
-
-    // YOUR CODE HERE
-
+async function fetchJSON(file) {
+  let result = fetch(file).then((r) => r.json());
+  return result;
 }
