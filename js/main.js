@@ -25,16 +25,15 @@ let game = {
 
 // ejercicio 6.3
 function getSolution(players, solutionArray, difference_In_Days) {
-  let sol = solutionArray[difference_In_Days - 1];
+  let sol = solutionArray[(difference_In_Days%solutionArray.length) - 1];
   let player = players.find((p) => p.id == sol.id);
   //return the player on a json
   return player;
 }
 
-Promise.all([fetchJSON("fullplayers"), fetchJSON("solution")]).then(
+Promise.all([fetchJSON("../json/fullplayers.json"), fetchJSON("../json/solution.json")]).then(
   (values) => {
     let solution;
-
     [game.players, solution] = values;
 
     game.solution = getSolution(game.players, solution, difference_In_Days);
