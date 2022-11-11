@@ -54,4 +54,17 @@ Promise.all([fetchJSON("../json/fullplayers.json"), fetchJSON("../json/solution.
   }
 );
 
+
+
+//Ejercicio 7.6
+
+let inputelem = document.getElementById("myInput"); // DEBO comprobar que es así...
+inputelem.addEventListener("keydown", (tecla)=>{
+  if(tecla.key == "Enter"){  //Enter, sí
+    let addRow = setupRows(game);
+    addRow(inputelem.value);
+  }
+});
+
+
 //sfghjksghfjkglhkkdstaytkflg
