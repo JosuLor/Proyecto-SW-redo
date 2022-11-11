@@ -45,7 +45,7 @@ Promise.all([fetchJSON("../json/fullplayers.json"), fetchJSON("../json/solution.
     ).src = `https://playfootball.games/media/players/${
       game.solution.id % 32
     }/${game.solution.id}.png`;
+
+    autocomplete(document.getElementById("myInput"), game)
   }
 );
-
-//sfghjksghfjkglhkkdstaytkflg
