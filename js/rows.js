@@ -1,36 +1,131 @@
-// // Ejercicio 7.1
-function getAge(dateString) { //dateString es la fecha del nacimiento de un jugador en formato Año-Mes-Dia
-    let arrayFechNacimiento = dateString.split("-");
-    let actualDate = new Date(); //Fecha actual  
-
-    let edad = (actualDate.getUTCFullYear() - arrayFechNacimiento[0])-1;
-
-    // console.log("Dia actual: " + actualDate.getUTCDate());
-    // console.log("Dia Nacimiento: " + arrayFechNacimiento[2]);
-    // console.log("-----------------------------------------------");
-    // console.log("Mes actual: " + (actualDate.getUTCMonth()+1));
-    // console.log("Mes Nacimiento: " + arrayFechNacimiento[1]);
+import { fetchJSON } from "./loaders.js";
 
 
-    if( ( arrayFechNacimiento[1] < (actualDate.getUTCMonth()+1) ) || ( (arrayFechNacimiento[1] == (actualDate.getUTCMonth()+1)) && (arrayFechNacimiento[2] <= actualDate.getUTCDate()) ) ){ //arrayFechNacimiento[1] = mes de nacimiento
-        edad++;
+// YOUR CODE HERE :  
+import { stringToHTML } from "./fragments.js"// .... stringToHTML ....
+export { setupRows }// .... setupRows .....
+
+const delay = 350;
+const attribs = ['nationality', 'leagueId', 'teamId', 'position', 'birthdate']
+
+
+let setupRows = function (game) {
+
+    // Ejercicio 7.1
+    function getAge(dateString) {//dateString es la fecha del nacimiento de un jugador en formato Año-Mes-Dia
+
+        let arrayFechNacimiento = dateString.split("-");
+        let actualDate = new Date(); //Fecha actual  
+
+        let edad = (actualDate.getUTCFullYear() - arrayFechNacimiento[0]) - 1;
+
+        // console.log("Dia actual: " + actualDate.getUTCDate());
+        // console.log("Dia Nacimiento: " + arrayFechNacimiento[2]);
+        // console.log("-----------------------------------------------");
+        // console.log("Mes actual: " + (actualDate.getUTCMonth()+1));
+        // console.log("Mes Nacimiento: " + arrayFechNacimiento[1]);
+        if ((arrayFechNacimiento[1] < (actualDate.getUTCMonth() + 1)) || ((arrayFechNacimiento[1] == (actualDate.getUTCMonth() + 1)) && (arrayFechNacimiento[2] <= actualDate.getUTCDate()))) { //arrayFechNacimiento[1] = mes de nacimiento
+            edad++;
+        }
+        console.log(edad);
     }
-    console.log(edad);
+    // Para probar geAge(Date) : getAge("1999-01-14");
+
+
+    //Ejercicio 7.2 
+    let check = function (theKey, theValue) { //FALTA COMPROBAR
+        if ((game.solution[theKey] == theValue)) {
+            return "correct";
+        }
+        return "incorrect";
+    }
+
+    // console.log(check('nationality', 'Spain'));
+
+    function setContent(guess) {
+        return [
+            `<img src="https://playfootball.games/who-are-ya/media/nations/${guess.nationality.toLowerCase()}.svg" alt="" style="width: 60%;">`,
+            `<img src="https://playfootball.games/media/competitions/${leagueToFlag(guess.leagueId)}.png" alt="" style="width: 60%;">`,
+            `<img src="https://cdn.sportmonks.com/images/soccer/teams/${guess.teamId % 32}/${guess.teamId}.png" alt="" style="width: 60%;">`,
+            `${guess.position}`,
+            `${getAge(guess.birthdate)}`
+        ]
+    }
+
+    function showContent(content, guess) {
+        let fragments = '', s = '';
+        for (let j = 0; j < content.length; j++) {
+            s = "".concat(((j + 1) * delay).toString(), "ms")
+            fragments += `<div class="w-1/5 shrink-0 flex justify-center ">
+                            <div class="mx-1 overflow-hidden w-full max-w-2 shadowed font-bold text-xl flex aspect-square rounded-full justify-center items-center bg-slate-400 text-white ${check(attribs[j], guess[attribs[j]]) == 'correct' ? 'bg-green-500' : ''} opacity-0 fadeInDown" style="max-width: 60px; animation-delay: ${s};">
+                                ${content[j]}
+                            </div>
+                         </div>`
+        }
+
+        let child = `<div class="flex w-full flex-wrap text-l py-2">
+                        <div class=" w-full grow text-center pb-2">
+                            <div class="mx-1 overflow-hidden h-full flex items-center justify-center sm:text-right px-4 uppercase font-bold text-lg opacity-0 fadeInDown " style="animation-delay: 0ms;">
+                                ${guess.name}
+                            </div>
+                        </div>
+                        ${fragments}`
+
+        let playersNode = document.getElementById('players')
+        playersNode.prepend(stringToHTML(child))
+    }
+
+    // Ejercicio 7.3
+    let getPlayer = function (playerId) { //FALTA COMPROBAR
+        let jugadores = fetchJSON("../json/fullplayers.json");
+        let i = 0;
+        while (jugadores[i].id != playerId && i < jugadores.length) {
+            i++;
+        }
+        if (jugadores[i] == playerId) {
+            return jugadores[i];
+        } else {
+            console.log(`No existe el jugador con el id ${playerId}`);
+        }
+    }
+
+    // Ejercicio 7.4
+    function leagueToFlag(leagueId) { //FALTA COMPROBAR
+        let jsonAux = {
+            league_flags:[
+                {
+                    "leagueId": "564",
+                    "flagId": "es1"
+                },
+                {               
+                    "leagueId": "8",
+                    "flagId": "en1"
+                },
+                {
+                    "leagueId": "384",
+                    "flagId": "it1"
+                },
+                {
+                    "leagueId": "301",
+                    "flagId": "fr1"
+                }
+            ]
+        };
+        
+        let i = 0;
+        while( (i < jsonAux.league_flags.length) && (leagueId != jsonAux.league_flags[i].leagueId) ){
+            i++;
+        }
+
+        return jsonAux.league_flags[i].flagId;
 }
-// Para probar geAge(Date) : getAge("1999-01-14");
 
-//Ejercicio 7.2
-function check(theKey, theValue){
-    
+return /* addRow */ function (playerId) { //ESTO ES LO QUE HACE "SetUpRows" EN "main.js"
+
+    let guess = getPlayer(playerId)
+    console.log(guess)
+
+    let content = setContent(guess)
+    showContent(content, guess)
 }
-
-
-// Ejercicio 7.3
-function getPlayer(playerId){
-
-}
-
-// Ejercicio 7.4
-function leagueToFlag(leagueId){
-
 }

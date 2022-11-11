@@ -1,5 +1,9 @@
 import { folder, leftArrow } from "./fragments.js";
 import { fetchJSON } from "./loaders.js";
+import { setupRows } from './rows.js';
+
+
+export { game }
 
 // ejercicio 6.1
 function differenceInDays(date1) {
@@ -11,8 +15,7 @@ function differenceInDays(date1) {
 let difference_In_Days = differenceInDays(new Date("08-18-2022"));
 
 window.onload = function () {
-  document.getElementById("gamenumber").innerText =
-    difference_In_Days.toString();
+  document.getElementById("gamenumber").innerText = difference_In_Days.toString();
   document.getElementById("back-icon").innerHTML = folder + leftArrow;
 };
 
@@ -23,6 +26,7 @@ let game = {
   players: [],
   leagues: [],
 };
+
 
 // ejercicio 6.3
 function getSolution(players, solutionArray, difference_In_Days) {
@@ -48,4 +52,13 @@ Promise.all([fetchJSON("../json/fullplayers.json"), fetchJSON("../json/solution.
   }
 );
 
-//sfghjksghfjkglhkkdstaytkflg
+
+//Ejercicio 7.6
+
+let inputelem = document.getElementById("myInput"); // DEBO comprobar que es así...
+inputelem.addEventListener("keydown", (tecla)=>{
+  if(tecla.key == "Enter"){  //Enter, sí
+    let addRow = setupRows(game);
+    addRow(inputelem.value);
+  }
+});
