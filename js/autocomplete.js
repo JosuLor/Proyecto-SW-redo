@@ -32,7 +32,7 @@ function autocomplete(inp, game) {
             if (val.toUpperCase() == players[i].name.substr(0, val.length).toUpperCase()) { /* esto OG-mente era if ( YOUR CODE HERE ) */
 
                 b = document.createElement("DIV");
-                b.classList.add('flex', 'items-start', 'gap-x-3', 'leading-   '0 , 'uppercase', 'text-sm');
+                b.classList.add('flex', 'items-start', 'gap-x-3', 'leading-tight', 'uppercase', 'text-sm');
                 b.innerHTML = `<img src="https://cdn.sportmonks.com/images/soccer/teams/${players[i].teamId % 32}/${players[i].teamId}.png"  width="28" height="28">`;
 
                 /*make the matching letters bold:*/
