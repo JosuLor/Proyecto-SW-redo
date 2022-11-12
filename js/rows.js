@@ -1,4 +1,6 @@
 import { fetchJSON } from "./loaders.js";
+import { higher } from "./fragments.js";
+import { lower } from "./fragments.js";
 //import {autocomplete} from "./autocomplete.js";
 // YOUR CODE HERE :
 // .... stringToHTML ....
@@ -103,7 +105,6 @@ let setupRows = function (game) {
      * @param {String} theValue the player given
      */
     let check = function (theKey, theValue) {
-        //FALTA COMPROBAR
         if (game.solution[theKey] == theValue) {
             return "correct";
         }
@@ -171,7 +172,7 @@ let setupRows = function (game) {
     function showContent(content, guess) {
         let fragments = "",
             s = "";
-        for (let j = 0; j < content.length; j++) {
+        for (let j = 0; j < content.length-1; j++) {
             s = "".concat(((j + 1) * delay).toString(), "ms");
             fragments += `<div class="w-1/5 shrink-0 flex justify-center ">
                             <div class="mx-1 overflow-hidden w-full max-w-2 shadowed font-bold text-xl flex aspect-square rounded-full justify-center items-center bg-slate-400 text-white ${
@@ -184,6 +185,35 @@ let setupRows = function (game) {
                             </div>
                          </div>`;
         }
+        //Add the las element with the corresponding arrow if the age is lower or higher than the correct one
+            
+            let difference 
+            if (game.solution[attribs[content.length-1]]  < guess[attribs[content.length-1]]) {
+                
+                difference = higher
+                
+            }else if(game.solution[attribs[content.length-1]] > guess[attribs[content.length-1]]){
+                
+                difference = lower
+                
+            }else{
+                    difference = ""
+
+            }
+
+            s = "".concat(((content.length-1 + 1) * delay).toString(), "ms");
+            fragments += `<div class="w-1/5 shrink-0 flex justify-center ">
+                            <div class="mx-1 overflow-hidden w-full max-w-2 shadowed font-bold text-xl flex aspect-square rounded-full justify-center items-center bg-slate-400 text-white ${
+                                check(attribs[content.length-1], guess[attribs[content.length-1]]) ==
+                                "correct"
+                                    ? "bg-green-500"
+                                    : ""
+                            } opacity-0 fadeInDown" style="max-width: 60px; animation-delay: ${s};">
+
+                                  ${content[content.length-1]}${difference}
+                            </div>
+                         </div>`;
+        ///////////////////////
 
         let child = `<div class="flex w-full flex-wrap text-l py-2">
                         <div class=" w-full grow text-center pb-2">

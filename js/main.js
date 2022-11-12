@@ -1,7 +1,7 @@
 import { folder, leftArrow } from "./fragments.js";
 import { fetchJSON } from "./loaders.js";
 import { setupRows } from './rows.js';
-
+import { autocomplete } from "./autocomplete.js";
 
 export { game }
 
@@ -50,7 +50,7 @@ Promise.all([fetchJSON("../json/fullplayers.json"), fetchJSON("../json/solution.
       game.solution.id % 32
     }/${game.solution.id}.png`;
 
-    //autocomplete(document.getElementById("myInput"), game) //
+    autocomplete(document.getElementById("myInput"), game) //
 
 
 

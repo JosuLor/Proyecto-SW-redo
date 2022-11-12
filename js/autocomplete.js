@@ -36,22 +36,29 @@ function autocomplete(inp, game) {
                 b.innerHTML = `<img src="https://cdn.sportmonks.com/images/soccer/teams/${players[i].teamId % 32}/${players[i].teamId}.png"  width="28" height="28">`;
 
                 /*make the matching letters bold:*/
-                b.innerHTML += `<div class='self-center'>
-                                    <span class='font-bold'> <strong> + arr[i].substr(0, val.length) + </strong></span><span class> arr[i].substr(val.length, players[i].name.length) </span>
-                                    <input type='hidden' name='name' value='${players[i].name}'>
-                                    <input type='hidden' name='id' value='${players[i].id}'>
-                                </div>`;
+                b.innerHTML += "<div>"+"<strong>"+players[i].name.substr(0, val.length)+"</strong>"+players[i].name.substr(val.length, players[i].name.length)+"</div>";
+
+                //add a tag with the name of the player
+                b.innerHTML += `<input class="hidden" href="#" value="${players[i].name}"></input>`;
+
+                
+                
+                console.log(b.innerHTML);
 
                 /*execute a function when someone clicks on the item value (DIV element):*/
                 b.addEventListener("click", function (e) {
                     /*insert the value for the autocomplete text field:*/
+                    
                     inp.value = this.getElementsByTagName("input")[0].value;
-
                     /*close the list of autocompleted values,
                     (or any other open lists of autocompleted values:*/
-                    closeAllLists();
 
-                    addRows()    /* YOUR CODE HERE */
+                    closeAllLists();
+                    //get the id of the player that was selected
+                    let playerId = players.filter((p) => p.name == inp.value)[0].id;
+
+                    //compare the player with the solution
+                    addRow(playerId)    
                 });
                 a.appendChild(b);
             }
