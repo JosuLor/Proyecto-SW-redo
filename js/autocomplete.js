@@ -1,6 +1,6 @@
 import {setupRows} from "./rows.js";
 
-export {autocomplete}
+
 
 function autocomplete(inp, game) {
 
@@ -122,3 +122,4 @@ function autocomplete(inp, game) {
 
 
 
+export {autocomplete}

@@ -1,4 +1,5 @@
 import { fetchJSON } from "./loaders.js";
+//import {autocomplete} from "./autocomplete.js";
 // YOUR CODE HERE :
 // .... stringToHTML ....
 // .... setupRows .....
@@ -18,9 +19,14 @@ const delay = 350;
 const attribs = ["nationality", "leagueId", "teamId", "position", "birthdate"];
 
 let setupRows = function (game) {
-    let [state, updateState] = initState("WAYgameState", game.solution.id);
+    //let [state, updateState] = initState("WAYgameState", game.solution.id);
 
     // Ejercicio 7.4
+    /**
+     * gives the id of the flag depending on the id of the league
+     * @param leagueId the id of that league
+     * @return the identifier of the flag
+     */
     function leagueToFlag(leagueId) {
         //FALTA COMPROBAR
         let jsonAux = {
@@ -32,6 +38,10 @@ let setupRows = function (game) {
                 {
                     leagueId: "8",
                     flagId: "en1",
+                },
+                {
+                    leagueId: "82",
+                    flagId: "de1",
                 },
                 {
                     leagueId: "384",
@@ -56,6 +66,11 @@ let setupRows = function (game) {
     }
 
     // Ejercicio 7.1
+    /**
+     * Gets the age of one player 
+     * @param {*} dateString the date of birth of a player in Year-Month-Day format
+     * @return the age of one player
+     */
     function getAge(dateString) {
         //dateString es la fecha del nacimiento de un jugador en formato Año-Mes-Dia
 
@@ -77,11 +92,16 @@ let setupRows = function (game) {
             //arrayFechNacimiento[1] = mes de nacimiento
             edad++;
         }
-        console.log(edad);
+        return (edad);
     }
     // Para probar geAge(Date) : getAge("1999-01-14");
 
     //Ejercicio 7.2
+    /**
+     * Checks if player given is the correct one
+     * @param {String} theKey the correct player
+     * @param {String} theValue the player given
+     */
     let check = function (theKey, theValue) {
         //FALTA COMPROBAR
         if (game.solution[theKey] == theValue) {
@@ -182,18 +202,27 @@ let setupRows = function (game) {
         //TODO - resetInput
     }
     // Ejercicio 7.3
-    let getPlayer = function (playerId) {
+    /**
+     * function to get the player with that id
+     * @param {*} playerId the id of the player to find
+     * @returns the player object if found, null otherwise
+     */
+    let getPlayer = async function (playerId) {
         //FALTA COMPROBAR
-        let jugadores = fetchJSON("../json/fullplayers.json");
-        let i = 0;
-        while (jugadores[i].id != playerId && i < jugadores.length) {
-            i++;
+        let jugadores = await fetchJSON("../json/fullplayers.json").then((data) => {
+            console.log(data);
+            return data;
+        })
+        
+        let player = jugadores.find((jugador) => jugador.id == playerId);
+
+        if (player) {
+            console.log("sol",player)
+            console.log(player.number)
+            return player
         }
-        if (jugadores[i] == playerId) {
-            return jugadores[i];
-        } else {
-            console.log(`No existe el jugador con el id ${playerId}`);
-        }
+        console.log(`No existe el jugador con el id ${playerId}`);
+        return null;
     };
 
     function gameEnded(lastGuess) {
@@ -201,33 +230,40 @@ let setupRows = function (game) {
         //TODO - gameEnded
     }
     resetInput();
-    return /* addRow */ function (playerId) {
+
+    return /* addRow */ async function (playerId) {
         //ESTO ES LO QUE HACE "SetUpRows" EN "main.js"
 
-        let guess = getPlayer(playerId);
-        console.log(guess);
+        let guess = await getPlayer(playerId)
 
-        let content = setContent(guess);
 
-        game.guesses.push(playerId);
-        updateState(playerId);
+        let content = setContent(guess)
+        showContent(content, guess)
+        
+        // let guess = getPlayer(playerId);
+        // console.log(guess);
 
-        resetInput();
+        // let content = setContent(guess);
 
-        if (gameEnded(playerId)) {
-            // updateStats(game.guesses.length);
+        // game.guesses.push(playerId);
+        // updateState(playerId);
 
-            if (playerId == game.solution.id) {
-                success();
-            }
+        // resetInput();
 
-            if (game.guesses.length == 8) {
-                gameOver();
-            }
+        // if (gameEnded(playerId)) {
+        //     // updateStats(game.guesses.length);
 
-            //TODO - interval
-            let interval = /* YOUR CODE HERE */ ;
-        }
-        showContent(content, guess);
+        //     if (playerId == game.solution.id) {
+        //         success();
+        //     }
+
+        //     if (game.guesses.length == 8) {
+        //         gameOver();
+        //     }
+
+        //     //TODO - interval
+        //     let interval = /* YOUR CODE HERE */ 0;
+        // }
+        // showContent(content, guess);
     };
 };

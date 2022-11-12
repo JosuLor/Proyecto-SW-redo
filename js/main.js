@@ -50,7 +50,7 @@ Promise.all([fetchJSON("../json/fullplayers.json"), fetchJSON("../json/solution.
       game.solution.id % 32
     }/${game.solution.id}.png`;
 
-    autocomplete(document.getElementById("myInput"), game) //
+    //autocomplete(document.getElementById("myInput"), game) //
 
 
 
