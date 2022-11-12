@@ -1,6 +1,7 @@
 import { fetchJSON } from "./loaders.js";
 import { higher } from "./fragments.js";
 import { lower } from "./fragments.js";
+import { initState } from "./stats.js";
 //import {autocomplete} from "./autocomplete.js";
 // YOUR CODE HERE :
 // .... stringToHTML ....
@@ -21,7 +22,8 @@ const delay = 350;
 const attribs = ["nationality", "leagueId", "teamId", "position", "birthdate"];
 
 let setupRows = function (game) {
-    //let [state, updateState] = initState("WAYgameState", game.solution.id);
+    // ejercicio 9.2.1
+    let [state, updateState] = initState("WAYgameState", game.solution.id);
 
     // Ejercicio 7.4
     /**
@@ -227,10 +229,12 @@ let setupRows = function (game) {
         playersNode.prepend(stringToHTML(child));
     }
 
+    // ejercicio 9.3
     function resetInput() {
-        // YOUR CODE HERE
-        //TODO - resetInput
+        document.getElementById("myInput").value = "Guess " + game.guesses.length + " of 8";
     }
+
+
     // Ejercicio 7.3
     /**
      * function to get the player with that id
@@ -255,23 +259,64 @@ let setupRows = function (game) {
         return null;
     };
 
+    // ejercicio 9.4
     function gameEnded(lastGuess) {
-        // YOUR CODE HERE
-        //TODO - gameEnded
+        if (game.guesses.length <= 8) {
+            if (lastGuess == game.solution.id) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
     resetInput();
 
     return /* addRow */ async function (playerId) {
         //ESTO ES LO QUE HACE "SetUpRows" EN "main.js"
 
-        let guess = await getPlayer(playerId)
+        // ejercicio 9.5 / 9.6
+        // hay que añadir cosas, no se a que se refiere, porque literalmente no dice que hay que añadir
+        // ademas, hay que hacer algo del unblur
+        // hay que hacer gameOver() y sucess()
 
+        // ejercicio 9.2.2
+        let guess = getPlayer(playerId)
+        console.log(guess)
 
         let content = setContent(guess)
+
+        game.guesses.push(playerId)
+        updateState(playerId)
+
+        resetInput();
+
+         if (gameEnded(playerId)) {
+            updateStats(game.guesses.length);
+
+            if (playerId == game.solution.id) {
+                success();
+            }
+
+            if (game.guesses.length == 8) {
+                gameOver();
+            }
+         }
+
+
         showContent(content, guess)
+
+
+        // ESTO NO APARECE EN LA MILESTONE 4, NO SE QUE QUERIAIS HACER CON
+        // PA NO BORRAR NADA QUE NO HABIA QUE BORRAR, COPIO LO DE LA MILESTORE 4 Y DEJO ESTO COMO ESTA       
+        //let guess = await getPlayer(playerId)
+
+        //let content = setContent(guess)
+        //showContent(content, guess)
         
-        // let guess = getPlayer(playerId);
-        // console.log(guess);
+        //let guess = getPlayer(playerId);
+        //console.log(guess);
 
         // let content = setContent(guess);
 

@@ -1,7 +1,5 @@
 import {setupRows} from "./rows.js";
 
-
-
 function autocomplete(inp, game) {
 
     let addRow = setupRows(game);
