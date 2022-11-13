@@ -1,7 +1,7 @@
 import { fetchJSON } from "./loaders.js";
 import { higher } from "./fragments.js";
 import { lower } from "./fragments.js";
-import { initState } from "./stats.js";
+import { updateStats, getStats, initState} from "./stats.js";
 //import {autocomplete} from "./autocomplete.js";
 // YOUR CODE HERE :
 // .... stringToHTML ....
@@ -231,7 +231,7 @@ let setupRows = function (game) {
 
     // ejercicio 9.3
     function resetInput() {
-        document.getElementById("myInput").value = "Guess " + game.guesses.length + " of 8";
+        document.getElementById("myInput").value = "Guess " + (game.guesses.length+1) + " of 8";
     }
 
 
@@ -261,7 +261,7 @@ let setupRows = function (game) {
 
     // ejercicio 9.4
     function gameEnded(lastGuess) {
-        if (game.guesses.length <= 8) {
+        if (game.guesses.length < 8) {
             if (lastGuess == game.solution.id) {
                 return true;
             } else {
@@ -282,31 +282,41 @@ let setupRows = function (game) {
         // hay que hacer gameOver() y sucess()
 
         // ejercicio 9.2.2
-        let guess = getPlayer(playerId)
-        console.log(guess)
+        let guess = await getPlayer(playerId)
 
         let content = setContent(guess)
-
         game.guesses.push(playerId)
         updateState(playerId)
-
+        
         resetInput();
 
          if (gameEnded(playerId)) {
             updateStats(game.guesses.length);
 
             if (playerId == game.solution.id) {
+                console.log("OGHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+
                 success();
             }
 
             if (game.guesses.length == 8) {
                 gameOver();
             }
-         }
-
-
+        }
         showContent(content, guess)
 
+
+        function success() {
+
+            unblur("success");
+            console.log("sucess function");
+        }
+
+        function gameOver() {
+
+            unblur("gameOver");
+            console.log("gameOver function");
+        }
 
         // ESTO NO APARECE EN LA MILESTONE 4, NO SE QUE QUERIAIS HACER CON
         // PA NO BORRAR NADA QUE NO HABIA QUE BORRAR, COPIO LO DE LA MILESTORE 4 Y DEJO ESTO COMO ESTA       
