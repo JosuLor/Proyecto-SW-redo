@@ -41,7 +41,7 @@ function autocomplete(inp, game) {
 
                 
                 
-                console.log(b.innerHTML);
+                // console.log(b.innerHTML);
 
                 /*execute a function when someone clicks on the item value (DIV element):*/
                 b.addEventListener("click", function (e) {

@@ -267,18 +267,18 @@ let setupRows = function (game) {
     let getPlayer = async function (playerId) {
         //FALTA COMPROBAR
         let jugadores = await fetchJSON("../json/fullplayers.json").then((data) => {
-            console.log(data);
+            // console.log(data);
             return data;
         })
         
         let player = jugadores.find((jugador) => jugador.id == playerId);
 
         if (player) {
-            console.log("sol",player)
-            console.log(player.number)
+            // console.log("sol",player)
+            // console.log(player.number)
             return player
         }
-        console.log(`No existe el jugador con el id ${playerId}`);
+        // console.log(`No existe el jugador con el id ${playerId}`);
         return null;
     };
 
@@ -299,13 +299,13 @@ let setupRows = function (game) {
     function success() {
         showStats();
         unblur("success");
-        console.log("sucess function");
+        // console.log("sucess function");
     }
 
     function gameOver() {
         showStats();
         unblur("gameOver");
-        console.log("gameOver function");
+        // console.log("gameOver function");
     }
     start(state.guesses)
     return /* addRow */ async function (playerId) {
@@ -329,7 +329,7 @@ let setupRows = function (game) {
             updateStats(game.guesses.length);
 
             if (playerId == game.solution.id) {
-                console.log("OGHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+                // console.log("OGHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
                 success();
             }
             if (game.guesses.length == 8) {

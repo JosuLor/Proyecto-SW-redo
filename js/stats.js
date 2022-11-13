@@ -12,7 +12,7 @@ let initState = function(what, solutionId) {
  
     
     if (item == null) {
-        console.log("no existe el item en el localStorage");
+        // console.log("no existe el item en el localStorage");
         item = { "guesses" : [], "solution": solutionId}; 
         localStorage.setItem(what, JSON.stringify(item));
         respuesta.push(item); 
