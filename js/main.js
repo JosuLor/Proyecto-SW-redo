@@ -18,6 +18,20 @@ window.onload = function () {
   document.getElementById("gamenumber").innerText = difference_In_Days.toString();
   document.getElementById("back-icon").innerHTML = folder + leftArrow;
   
+  let stats = localStorage.getItem("gameStats");
+
+  if (stats == null) {
+    stats = {winDistribution: [0,0,0,0,0,0,0,0,0],
+      gamesFailed: 0,
+      currentStreak: 0,
+      bestStreak: 0,
+      totalGames: 0,
+      successRate: 0
+      }
+    localStorage.setItem("gameStats", JSON.stringify(stats));
+  }
+
+
   console.log(game.guesses);
 };
 

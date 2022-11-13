@@ -1,7 +1,8 @@
 import { fetchJSON } from "./loaders.js";
-import { higher } from "./fragments.js";
+import { higher, toggle, headless,stats} from "./fragments.js";
 import { lower } from "./fragments.js";
 import { updateStats, getStats, initState} from "./stats.js";
+
 //import {autocomplete} from "./autocomplete.js";
 // YOUR CODE HERE :
 // .... stringToHTML ....
@@ -295,25 +296,37 @@ let setupRows = function (game) {
 
             if (playerId == game.solution.id) {
                 console.log("OGHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
-
                 success();
             }
-
             if (game.guesses.length == 8) {
                 gameOver();
             }
+            
+            //TODO - interval
+            //get the time until the next day
+
+            let interval = setInterval(() => {
+                //get the actual time of the day
+                let now = new Date();
+                let hours = 23 - now.getHours();
+                let minutes = 60 - now.getMinutes();
+                let seconds = 60 - now.getSeconds();
+                let time = document.getElementById("nextPlayer");
+                time.innerHTML = hours +":" +minutes +":" + seconds;
+            }, 1000);
+            
         }
         showContent(content, guess)
 
 
         function success() {
-
+            showStats();
             unblur("success");
             console.log("sucess function");
         }
 
         function gameOver() {
-
+            showStats();
             unblur("gameOver");
             console.log("gameOver function");
         }
