@@ -26,6 +26,28 @@ let setupRows = function (game) {
     // ejercicio 9.2.1
     let [state, updateState] = initState("WAYgameState", game.solution.id);
 
+    //initialize the previous guesses and check if the game is over
+    async function start(list){
+        let content
+        let guess
+        let playerId
+        game.guesses = list;
+        for (let i = 0; i < list.length ; i++) {
+            playerId = list[i];
+            guess = await getPlayer(playerId)
+            content = setContent(guess)
+            showContent(content, guess)
+            if(guess.id == game.solution.id){
+                success();
+            }
+        }
+        if(list.length >= 7){
+            gameOver();
+        }
+        showContent(content, guess)
+
+    } 
+    
     // Ejercicio 7.4
     /**
      * gives the id of the flag depending on the id of the league
@@ -273,7 +295,19 @@ let setupRows = function (game) {
         return true;
     }
     resetInput();
+    
+    function success() {
+        showStats();
+        unblur("success");
+        console.log("sucess function");
+    }
 
+    function gameOver() {
+        showStats();
+        unblur("gameOver");
+        console.log("gameOver function");
+    }
+    start(state.guesses)
     return /* addRow */ async function (playerId) {
         //ESTO ES LO QUE HACE "SetUpRows" EN "main.js"
 
@@ -305,7 +339,7 @@ let setupRows = function (game) {
             //TODO - interval
             //get the time until the next day
 
-            let interval = setInterval(() => {
+            setInterval(() => {
                 //get the actual time of the day
                 let now = new Date();
                 let hours = 23 - now.getHours();
@@ -318,18 +352,6 @@ let setupRows = function (game) {
         }
         showContent(content, guess)
 
-
-        function success() {
-            showStats();
-            unblur("success");
-            console.log("sucess function");
-        }
-
-        function gameOver() {
-            showStats();
-            unblur("gameOver");
-            console.log("gameOver function");
-        }
 
         // ESTO NO APARECE EN LA MILESTONE 4, NO SE QUE QUERIAIS HACER CON
         // PA NO BORRAR NADA QUE NO HABIA QUE BORRAR, COPIO LO DE LA MILESTORE 4 Y DEJO ESTO COMO ESTA       

@@ -6,7 +6,6 @@ let initState = function(what, solutionId) {
     let item = localStorage.getItem(what);
     let respuesta = [];
     let varJson;
-    console.log("asdfasdfasdfasdf", item);
     
     // si no existe el item en el localStorage, se crea una variable con formato JSON y luego se convierte en un objeto JSON
     // si existe el item en el localStorage, se convierte el string en un objeto JSON
