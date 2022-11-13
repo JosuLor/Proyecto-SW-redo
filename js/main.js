@@ -30,8 +30,7 @@ window.onload = function () {
       }
     localStorage.setItem("gameStats", JSON.stringify(stats));
   }
-  let ids = localStorage.getItem("WAYgameState").guesses;
-  setupRows(ids[0]);
+
 
 };
 
