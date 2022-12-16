@@ -1,7 +1,8 @@
 import { fetchJSON } from "./loaders.js";
-import { higher } from "./fragments.js";
+import { higher, toggle, headless,stats} from "./fragments.js";
 import { lower } from "./fragments.js";
-import { initState } from "./stats.js";
+import { updateStats, getStats, initState} from "./stats.js";
+
 //import {autocomplete} from "./autocomplete.js";
 // YOUR CODE HERE :
 // .... stringToHTML ....
@@ -25,6 +26,28 @@ let setupRows = function (game) {
     // ejercicio 9.2.1
     let [state, updateState] = initState("WAYgameState", game.solution.id); // si se comenta esto, el combobox aparece
 
+    //initialize the previous guesses and check if the game is over
+    async function start(list){
+        let content
+        let guess
+        let playerId
+        game.guesses = list;
+        for (let i = 0; i < list.length ; i++) {
+            playerId = list[i];
+            guess = await getPlayer(playerId)
+            content = setContent(guess)
+            showContent(content, guess)
+            if(guess.id == game.solution.id){
+                success();
+            }
+        }
+        if(list.length >= 7){
+            gameOver();
+        }
+        showContent(content, guess)
+
+    } 
+    
     // Ejercicio 7.4
     /**
      * gives the id of the flag depending on the id of the league
@@ -231,7 +254,7 @@ let setupRows = function (game) {
 
     // ejercicio 9.3
     function resetInput() {
-        document.getElementById("myInput").value = "Guess " + game.guesses.length + " of 8";
+        document.getElementById("myInput").value = "Guess " + (game.guesses.length+1) + " of 8";
     }
 
 
@@ -244,24 +267,24 @@ let setupRows = function (game) {
     let getPlayer = async function (playerId) {
         //FALTA COMPROBAR
         let jugadores = await fetchJSON("../json/fullplayers.json").then((data) => {
-            console.log(data);
+            // console.log(data);
             return data;
         })
         
         let player = jugadores.find((jugador) => jugador.id == playerId);
 
         if (player) {
-            console.log("sol",player)
-            console.log(player.number)
+            // console.log("sol",player)
+            // console.log(player.number)
             return player
         }
-        console.log(`No existe el jugador con el id ${playerId}`);
+        // console.log(`No existe el jugador con el id ${playerId}`);
         return null;
     };
 
     // ejercicio 9.4
     function gameEnded(lastGuess) {
-        if (game.guesses.length <= 8) {
+        if (game.guesses.length < 8) {
             if (lastGuess == game.solution.id) {
                 return true;
             } else {
@@ -272,7 +295,19 @@ let setupRows = function (game) {
         return true;
     }
     resetInput();
+    
+    function success() {
+        showStats();
+        unblur("success");
+        // console.log("sucess function");
+    }
 
+    function gameOver() {
+        showStats();
+        unblur("gameOver");
+        // console.log("gameOver function");
+    }
+    start(state.guesses)
     return /* addRow */ async function (playerId) {
         //ESTO ES LO QUE HACE "SetUpRows" EN "main.js"
 
@@ -282,29 +317,39 @@ let setupRows = function (game) {
         // hay que hacer gameOver() y sucess()
 
         // ejercicio 9.2.2
-        let guess = getPlayer(playerId)
-        console.log(guess)
+        let guess = await getPlayer(playerId)
 
         let content = setContent(guess)
-
         game.guesses.push(playerId)
         updateState(playerId)
-
+        
         resetInput();
 
          if (gameEnded(playerId)) {
             updateStats(game.guesses.length);
 
             if (playerId == game.solution.id) {
+                // console.log("OGHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
                 success();
             }
-
             if (game.guesses.length == 8) {
                 gameOver();
             }
-         }
+            
+            //TODO - interval
+            //get the time until the next day
 
-
+            setInterval(() => {
+                //get the actual time of the day
+                let now = new Date();
+                let hours = 23 - now.getHours();
+                let minutes = 60 - now.getMinutes();
+                let seconds = 60 - now.getSeconds();
+                let time = document.getElementById("nextPlayer");
+                time.innerHTML = hours +":" +minutes +":" + seconds;
+            }, 1000);
+            
+        }
         showContent(content, guess)
 
 

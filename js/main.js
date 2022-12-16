@@ -17,11 +17,27 @@ let difference_In_Days = differenceInDays(new Date("08-18-2022"));
 window.onload = function () {
   document.getElementById("gamenumber").innerText = difference_In_Days.toString();
   document.getElementById("back-icon").innerHTML = folder + leftArrow;
+  
+  let stats = localStorage.getItem("gameStats");
+
+  if (stats == null) {
+    stats = {winDistribution: [0,0,0,0,0,0,0,0,0],
+      gamesFailed: 0,
+      currentStreak: 0,
+      bestStreak: 0,
+      totalGames: 0,
+      successRate: 0
+      }
+    localStorage.setItem("gameStats", JSON.stringify(stats));
+  }
+
+
 };
 
 // array central
+//se le añade esa linea al guesses para que al recargar la página tenga en cuenta los intentos que ya has hecho previamente y los escriba en el comboBox
 let game = {
-  guesses: [],
+  guesses: localStorage.getItem("WAYgameState") ? JSON.parse(localStorage.getItem("WAYgameState")).guesses : [],
   solution: {},
   players: [],
   leagues: [],
@@ -42,7 +58,7 @@ Promise.all([fetchJSON("../json/fullplayers.json"), fetchJSON("../json/solution.
 
     game.solution = getSolution(game.players, solution, difference_In_Days);
 
-    console.log(game.solution);
+    // console.log(game.solution);
 
     document.getElementById(
       "mistery"
@@ -54,23 +70,18 @@ Promise.all([fetchJSON("../json/fullplayers.json"), fetchJSON("../json/solution.
 
 
 
-      // YOUR CODE HERE
-      //TODO
-    let addRow = setupRows( /* THIS NEEDS A PARAMETER */ );
-    // get myInput object...
-      // when the user types a number an press the Enter key:
-        addRow( /* the ID of the player, where is it? */);
-    //  
+
+    //Ejercicio 7.6
+    //esto en la milestone 2 estaba fuera de la funcion, por eso daba un error.......
+  let inputelem = document.getElementById("myInput"); 
+  inputelem.addEventListener("keydown", (tecla)=>{
+    if(tecla.key == "Enter"){  
+      let addRow = setupRows(game);
+      addRow(inputelem.value);
+    }
+  });
 
   }
 );
 
-//Ejercicio 7.6
 
-let inputelem = document.getElementById("myInput"); // DEBO comprobar que es así...
-inputelem.addEventListener("keydown", (tecla)=>{
-  if(tecla.key == "Enter"){  //Enter, sí
-    let addRow = setupRows(game);
-    addRow(inputelem.value);
-  }
-});
