@@ -23,7 +23,7 @@ const attribs = ["nationality", "leagueId", "teamId", "position", "birthdate"];
 
 let setupRows = function (game) {
     // ejercicio 9.2.1
-    let [state, updateState] = initState("WAYgameState", game.solution.id);
+    let [state, updateState] = initState("WAYgameState", game.solution.id); // si se comenta esto, el combobox aparece
 
     // Ejercicio 7.4
     /**
